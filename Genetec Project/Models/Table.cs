@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Genetec_Project.Models
 {
@@ -13,7 +11,7 @@ namespace Genetec_Project.Models
 
         public static string filepath = @"file.json";
 
-        public static void readFile() {
+        public static async Task readFile() {
             using (StreamReader r = new StreamReader(filepath)) {
                 string json = r.ReadToEnd();
                 string[] items = JsonConvert.DeserializeObject<string[]>(json);

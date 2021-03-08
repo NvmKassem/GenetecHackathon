@@ -29,13 +29,16 @@ namespace Genetec_Project.Services
                 Console.WriteLine("Found match");
                 var response = await client.PostAsync(uri, new StringContent(load, Encoding.UTF8, "application/json"));
                 Console.WriteLine("Send data to server, response : " + response);
+            } else {
+                Console.WriteLine("No match"); 
             }
-            Console.WriteLine("No match");             
+            Console.WriteLine();        
             // complete the message. messages is deleted from the queue. 
             await args.CompleteMessageAsync(args.Message);
         }
 
         static bool checkMatch(string plate) {
+            Console.WriteLine("Current time: {0:HH:mm:ss.fff}", DateTime.Now);
             Console.WriteLine(plate);
             Console.WriteLine("[{0}]", string.Join(", ", Table.table));
             for (int i = 0; i < Table.table.Length; i++) {

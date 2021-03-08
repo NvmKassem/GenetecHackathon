@@ -51,8 +51,14 @@ namespace Genetec_Project.Services
 
         public static async Task ReceiveMessagesFromSubscriptionAsync() {
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", "dGVhbTAyOi1BTU1wc25oW251T3IxcFM=");
+            
+            //UNCOMMENT !!
             //await getTable(baseUrl);
-            Table.readFile();
+
+            //COMMENT !!
+            await Table.readFile();
+
+
             await using (ServiceBusClient client = new ServiceBusClient(connectionString)) {
                 // create a processor that we can use to process the messages
                 ServiceBusProcessor processor = client.CreateProcessor(topicName, subscriptionName, new ServiceBusProcessorOptions());
