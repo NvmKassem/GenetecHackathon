@@ -25,10 +25,25 @@ namespace Genetec_Project.Services
             var payload = JsonConvert.DeserializeObject<Payload>(body);
             string load = JsonConvert.SerializeObject(payload);
 
-            var response = await client.PostAsync(uri, new StringContent(load, Encoding.UTF8, "application/json"));
-            Console.WriteLine("Send data to server, response : " + response);
+            if (checkMatch(payload.LicensePlate)) {
+                Console.WriteLine("Found match");
+                var response = await client.PostAsync(uri, new StringContent(load, Encoding.UTF8, "application/json"));
+                Console.WriteLine("Send data to server, response : " + response);
+            }
+            Console.WriteLine("No match");             
             // complete the message. messages is deleted from the queue. 
             await args.CompleteMessageAsync(args.Message);
+        }
+
+        static bool checkMatch(string plate) {
+            Console.WriteLine(plate);
+            Console.WriteLine("[{0}]", string.Join(", ", Table.table));
+            for (int i = 0; i < Table.table.Length; i++) {
+                if (plate.Equals(Table.table[i])) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         static Task ErrorHandler(ProcessErrorEventArgs args) {
