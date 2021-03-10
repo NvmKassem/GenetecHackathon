@@ -20,6 +20,8 @@ namespace Genetec_Project.Services
         };
 
         public static bool FuzzyEquals(string plate, string wanted) {
+            if (plate.Length != wanted.Length)
+                return false;
             
             for(int i = 0; i < plate.Length; i++) {
                 if (plate[i].Equals(wanted[i]) || FuzzyCharacter(plate[i], wanted[i])) {
@@ -48,7 +50,7 @@ namespace Genetec_Project.Services
             if (!lookLeft)
                 if (y + 1 < FuzzyList.Length)
                     for (int j = y + 1; j < FuzzyList[x].Length; j++) {
-                        if (FuzzyList[x][y].Equals(char2))
+                        if (FuzzyList[x][j].Equals(char2))
                             return true;
                     }
                 else
@@ -56,7 +58,7 @@ namespace Genetec_Project.Services
             else
                 if (y > 0)
                     for (int j = y - 1; j >= 0; j--) {
-                        if (FuzzyList[x][y].Equals(char2))
+                        if (FuzzyList[x][j].Equals(char2))
                             return true;
                     }
                 else

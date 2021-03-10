@@ -53,10 +53,10 @@ namespace Genetec_Project.Services
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", "dGVhbTAyOi1BTU1wc25oW251T3IxcFM=");
             
             //UNCOMMENT !!
-            //await getTable(baseUrl);
+            await getTable(baseUrl);
 
             //COMMENT !!
-            await Table.readFile();
+            //await Table.readFile();
 
 
             await using (ServiceBusClient client = new ServiceBusClient(connectionString)) {
