@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Genetec_Project.Models
 {
-    class Payload
+    class ReceptionPayload
     {
         public string LicensePlateCaptureTime {
             get;
@@ -22,5 +22,11 @@ namespace Genetec_Project.Models
             get;
             set;
         }
+
+        public string ContextImageJpg {
+            get;
+            set;
+        }
+
     }
 }

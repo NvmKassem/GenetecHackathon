@@ -2,7 +2,7 @@
 using Genetec_Project.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -22,13 +22,23 @@ namespace Genetec_Project.Services
 
         static async Task MessageHandler(ProcessMessageEventArgs args) {
             string body = args.Message.Body.ToString();
-            var payload = JsonConvert.DeserializeObject<Payload>(body);
-            string load = JsonConvert.SerializeObject(payload);
+            var receivingPayload = JsonConvert.DeserializeObject<ReceptionPayload>(body);
+            string rec_load = JsonConvert.SerializeObject(receivingPayload);
 
-            if (checkMatch(payload.LicensePlate)) {
-                Console.WriteLine("Found match");
-                var response = await client.PostAsync(uri, new StringContent(load, Encoding.UTF8, "application/json"));
+           
+            if (checkMatch(receivingPayload.LicensePlate)) {
+                var sendingPayload = JsonConvert.DeserializeObject<SendingPayload>(rec_load);
+                File.WriteAllBytes(@"current.json", Convert.FromBase64String(receivingPayload.ContextImageJpg));
+
+                await using (FileStream my_stream = new FileStream("current.json", FileMode.Open, FileAccess.Read)) {
+                    sendingPayload.ContextImageReference = await Problem3.UploadImage(@"current.json", my_stream);
+                }
+
+                string sen_load = JsonConvert.SerializeObject(sendingPayload);
+                Console.WriteLine(sen_load);
+                var response = await client.PostAsync(uri, new StringContent(sen_load, Encoding.UTF8, "application/json"));
                 Console.WriteLine("Send data to server, response : " + response);
+                Console.WriteLine("Found match !");
             } else {
                 Console.WriteLine("No match"); 
             }
@@ -42,7 +52,7 @@ namespace Genetec_Project.Services
             Console.WriteLine(plate);
             Console.WriteLine("[{0}]", string.Join(", ", Table.table));
             for (int i = 0; i < Table.table.Length; i++) {
-                if (plate.Equals(Table.table[i])) {
+                if (Problem4.FuzzyEquals(plate,Table.table[i])) {
                     return true;
                 }
             }
